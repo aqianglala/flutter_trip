@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:my_trip/dao/home_dao.dart';
+import 'package:my_trip/models/common.dart';
+import 'package:my_trip/models/home.dart';
+import 'package:my_trip/widget/local_nav.dart';
 
 class HomeRoute extends StatefulWidget {
   @override
@@ -10,6 +14,16 @@ class _HomeRouteState extends State<HomeRoute>
     with AutomaticKeepAliveClientMixin {
   static const double APP_BAR_HEIGHT = 100.0;
   double _appBarAlpha = 0;
+
+  List<Common> _bannerList = [];
+  List<Common> _localNavList = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _refresh();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +45,9 @@ class _HomeRouteState extends State<HomeRoute>
                 child: ListView(
                   children: <Widget>[
                     _banner,
-                    Container(
-                      height: 800,
-                      color: Colors.green,
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
+                      child: LocalNav(localNavList: _localNavList,),
                     )
                   ],
                 ),
@@ -79,16 +93,31 @@ class _HomeRouteState extends State<HomeRoute>
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
             child: new Image.network(
-              "http://pages.ctrip.com/commerce/promote/20180718/yxzy/img/640sygd.jpg",
+              _bannerList[index].icon,
               fit: BoxFit.fill,
             ),
             onTap: () {},
           );
         },
-        itemCount: 3,
+        itemCount: _bannerList.length,
         pagination: new SwiperPagination(),
         autoplay: true,
       ),
     );
+  }
+
+  void _refresh() async{
+    try{
+      Home homeModel = await HomeDao.fetch();
+      setState(() {
+        _bannerList = homeModel.bannerList;
+        _localNavList = homeModel.localNavList;
+      });
+    }catch (e) {
+      print(e);
+      setState(() {
+
+      });
+    }
   }
 }

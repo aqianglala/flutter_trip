@@ -1,0 +1,8 @@
+{
+  "config": "$config",
+  "bannerList": "$[]common",
+  "localNavList": "$[]common",
+  "gridNav": "$gridNav",
+  "subNavList": "$[]common",
+  "salesBox": "$salesBox"
+}
