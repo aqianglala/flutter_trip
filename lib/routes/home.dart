@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:my_trip/dao/home_dao.dart';
 import 'package:my_trip/models/common.dart';
+import 'package:my_trip/models/gridNav.dart';
 import 'package:my_trip/models/home.dart';
+import 'package:my_trip/models/salesBox.dart';
+import 'package:my_trip/widget/grid_nav.dart';
 import 'package:my_trip/widget/local_nav.dart';
+import 'package:my_trip/widget/sales_box.dart';
+import 'package:my_trip/widget/sub_nav.dart';
 
 class HomeRoute extends StatefulWidget {
   @override
@@ -17,6 +22,10 @@ class _HomeRouteState extends State<HomeRoute>
 
   List<Common> _bannerList = [];
   List<Common> _localNavList = [];
+  List<Common> _subNavList = [];
+  GridNav _gridNav;
+
+  SalesBox _salesBox;
 
   @override
   void initState() {
@@ -47,7 +56,27 @@ class _HomeRouteState extends State<HomeRoute>
                     _banner,
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7),
-                      child: LocalNav(localNavList: _localNavList,),
+                      child: LocalNav(
+                        localNavList: _localNavList,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
+                      child: GridNavWidget(
+                        gridNavModel: _gridNav,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
+                      child: SubNav(
+                        subNavList: _subNavList,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(7, 0, 7, 4),
+                      child: SaleBox(
+                        salesBox: _salesBox,
+                      ),
                     )
                   ],
                 ),
@@ -106,18 +135,19 @@ class _HomeRouteState extends State<HomeRoute>
     );
   }
 
-  void _refresh() async{
-    try{
+  void _refresh() async {
+    try {
       Home homeModel = await HomeDao.fetch();
       setState(() {
         _bannerList = homeModel.bannerList;
         _localNavList = homeModel.localNavList;
+        _gridNav = homeModel.gridNav;
+        _subNavList = homeModel.subNavList;
+        _salesBox = homeModel.salesBox;
       });
-    }catch (e) {
+    } catch (e) {
       print(e);
-      setState(() {
-
-      });
+      setState(() {});
     }
   }
 }

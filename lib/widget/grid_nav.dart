@@ -10,14 +10,19 @@ class GridNavWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: _gridNavItems(context),
+    return PhysicalModel(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(6),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: _gridNavItems(context),
+      ),
     );
   }
 
   _gridNavItems(BuildContext context) {
-    if (gridNavModel == null) return null;
     List<Widget> items = [];
+    if (gridNavModel == null) return items;
     if (gridNavModel.hotel != null) {
       items.add(_gridNavItem(context, gridNavModel.hotel, true));
     }
@@ -33,7 +38,7 @@ class GridNavWidget extends StatelessWidget {
   Widget _gridNavItem(
       BuildContext context, GridNavItem gridNavItem, bool first) {
     List<Widget> items = [];
-    items.add(_mainItem(context, gridNavItem));
+    items.add(_mainItem(context, gridNavItem.mainItem));
     items.add(_doubleItems(context, gridNavItem.item1, gridNavItem.item2));
     items.add(_doubleItems(context, gridNavItem.item3, gridNavItem.item4));
     List<Widget> expandedItems = [];
@@ -51,12 +56,61 @@ class GridNavWidget extends StatelessWidget {
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: [startColor, endColor])),
       child: Row(
-        children: items,
+        children: expandedItems,
       ),
     );
   }
 
-  Widget _mainItem(BuildContext context, GridNavItem gridNavItem) {}
+  Widget _mainItem(BuildContext context, Common mainItem) {
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      children: <Widget>[
+        Image.network(
+          mainItem.icon,
+          height: 88,
+          width: 121,
+          alignment: AlignmentDirectional.bottomEnd,
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 11),
+          child: Text(
+            mainItem.title,
+            style: TextStyle(color: Colors.white, fontSize: 14),
+          ),
+        )
+      ],
+    );
+  }
 
-  Widget _doubleItems(BuildContext context, Common item1, Common item2) {}
+  Widget _doubleItems(BuildContext context, Common item1, Common item2) {
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: _item(context, item1, true),
+        ),
+        Expanded(
+          child: _item(context, item2, false),
+        ),
+      ],
+    );
+  }
+
+  _item(BuildContext context, Common item, bool first) {
+    BorderSide borderSide = BorderSide(width: 0.8, color: Colors.white);
+    return FractionallySizedBox(
+      widthFactor: 1,
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border(
+                left: borderSide,
+                bottom: first ? borderSide : BorderSide.none)),
+        child: Center(
+          child: Text(
+            item.title,
+            style: TextStyle(fontSize: 14, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
 }
