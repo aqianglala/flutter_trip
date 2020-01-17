@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_trip/demo/page_view.dart';
 import 'package:my_trip/routes/tab_navigator.dart';
 
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -14,6 +15,8 @@ class MyApp extends StatelessWidget {
       ),
 //      home: MyHomePage(title: 'Flutter Demo Home Page'),
       home: TabRoute(),
+//      home: WebViewExample(),
+//      home: WebViewExample(url: "https://m.ctrip.com/events/jiudianshangchenghuodong.html?disable_webview_cache_key=1"),
       routes: <String, WidgetBuilder>{
         "pageViewDemo": (context) => PageViewRoute(),
       },

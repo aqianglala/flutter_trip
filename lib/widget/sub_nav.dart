@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_trip/models/common.dart';
+import 'package:my_trip/util/navigator_util.dart';
+import 'package:my_trip/widget/web_view.dart';
 
 class SubNav extends StatelessWidget {
   final List<Common> subNavList;
@@ -44,6 +46,16 @@ class SubNav extends StatelessWidget {
 
   Widget _item(BuildContext context, Common item) {
     return Expanded(
+        child: GestureDetector(
+      onTap: () {
+        NavigatorUtil.push(
+            context,
+            WebView(
+              url: item.url,
+              statusBarColor: item.statusBarColor,
+              hideAppBar: item.hideAppBar,
+            ));
+      },
       child: Column(
         children: <Widget>[
           Image.network(
@@ -60,6 +72,6 @@ class SubNav extends StatelessWidget {
           )
         ],
       ),
-    );
+    ));
   }
 }

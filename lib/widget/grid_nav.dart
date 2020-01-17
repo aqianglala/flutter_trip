@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:my_trip/models/common.dart';
 import 'package:my_trip/models/gridNav.dart';
 import 'package:my_trip/models/gridNavItem.dart';
+import 'package:my_trip/util/navigator_util.dart';
+import 'package:my_trip/widget/web_view.dart';
 
 class GridNavWidget extends StatelessWidget {
   final GridNav gridNavModel;
@@ -62,24 +64,27 @@ class GridNavWidget extends StatelessWidget {
   }
 
   Widget _mainItem(BuildContext context, Common mainItem) {
-    return Stack(
-      alignment: AlignmentDirectional.topCenter,
-      children: <Widget>[
-        Image.network(
-          mainItem.icon,
-          height: 88,
-          width: 121,
-          alignment: AlignmentDirectional.bottomEnd,
+    return _wrapGesture(
+        context,
+        Stack(
+          alignment: AlignmentDirectional.topCenter,
+          children: <Widget>[
+            Image.network(
+              mainItem.icon,
+              height: 88,
+              width: 121,
+              alignment: AlignmentDirectional.bottomEnd,
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 11),
+              child: Text(
+                mainItem.title,
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            )
+          ],
         ),
-        Container(
-          margin: EdgeInsets.only(top: 11),
-          child: Text(
-            mainItem.title,
-            style: TextStyle(color: Colors.white, fontSize: 14),
-          ),
-        )
-      ],
-    );
+        mainItem);
   }
 
   Widget _doubleItems(BuildContext context, Common item1, Common item2) {
@@ -99,7 +104,7 @@ class GridNavWidget extends StatelessWidget {
     BorderSide borderSide = BorderSide(width: 0.8, color: Colors.white);
     return FractionallySizedBox(
       widthFactor: 1,
-      child: Container(
+      child: _wrapGesture(context, Container(
         decoration: BoxDecoration(
             border: Border(
                 left: borderSide,
@@ -110,7 +115,23 @@ class GridNavWidget extends StatelessWidget {
             style: TextStyle(fontSize: 14, color: Colors.white),
           ),
         ),
-      ),
+      ), item)
+    );
+  }
+
+  _wrapGesture(BuildContext context, Widget widget, Common model) {
+    return GestureDetector(
+      onTap: () {
+        NavigatorUtil.push(
+            context,
+            WebView(
+              url: model.url,
+              statusBarColor: model.statusBarColor,
+              title: model.title,
+              hideAppBar: model.hideAppBar,
+            ));
+      },
+      child: widget,
     );
   }
 }

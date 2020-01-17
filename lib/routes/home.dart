@@ -9,6 +9,7 @@ import 'package:my_trip/widget/grid_nav.dart';
 import 'package:my_trip/widget/local_nav.dart';
 import 'package:my_trip/widget/sales_box.dart';
 import 'package:my_trip/widget/sub_nav.dart';
+import 'package:my_trip/widget/web_view.dart';
 
 class HomeRoute extends StatefulWidget {
   @override
@@ -125,7 +126,13 @@ class _HomeRouteState extends State<HomeRoute>
               _bannerList[index].icon,
               fit: BoxFit.fill,
             ),
-            onTap: () {},
+            onTap: () {
+              Common model = _bannerList[index];
+              Navigator.push(context, MaterialPageRoute(builder: (context){
+                return WebView(url: model.url,
+                    title: model.title,);
+              }));
+            },
           );
         },
         itemCount: _bannerList.length,

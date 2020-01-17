@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_trip/models/common.dart';
 import 'package:my_trip/models/salesBox.dart';
+import 'package:my_trip/util/navigator_util.dart';
+import 'package:my_trip/widget/web_view.dart';
 
 class SaleBox extends StatelessWidget {
   final SalesBox salesBox;
@@ -52,9 +54,17 @@ class SaleBox extends StatelessWidget {
                   Color(0xffff6cc9),
                 ], begin: Alignment.centerLeft, end: Alignment.centerRight),
                 borderRadius: BorderRadius.circular(12)),
-            child: Text(
-              "获取更多福利 >",
-              style: TextStyle(color: Colors.white, fontSize: 12),
+            child: GestureDetector(
+              onTap: () {
+                NavigatorUtil.push(
+                  context,
+                  WebView(url: salesBox.moreUrl, title: '更多活动'),
+                );
+              },
+              child: Text(
+                "获取更多福利 >",
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
             ),
           )
         ],
@@ -74,17 +84,36 @@ class SaleBox extends StatelessWidget {
 
   _item(BuildContext context, Common item, bool big, bool left, bool last) {
     BorderSide borderSide = BorderSide(width: 0.8, color: Color(0xfff2f2f2));
-    return Container(
-      decoration: BoxDecoration(
-          border: Border(
-        right: left ? borderSide : BorderSide.none,
-        bottom: last ? BorderSide.none : borderSide,
-      )),
-      child: Image.network(
-        item.icon,
-        width: (MediaQuery.of(context).size.width - 14 - 0.8) / 2,
-        height: big ? 129 : 80,
-      ),
+    return _wrapGesture(
+        context,
+        Container(
+          decoration: BoxDecoration(
+              border: Border(
+            right: left ? borderSide : BorderSide.none,
+            bottom: last ? BorderSide.none : borderSide,
+          )),
+          child: Image.network(
+            item.icon,
+            width: (MediaQuery.of(context).size.width - 14 - 0.8) / 2,
+            height: big ? 129 : 80,
+          ),
+        ),
+        item);
+  }
+
+  _wrapGesture(BuildContext context, Widget widget, Common model) {
+    return GestureDetector(
+      onTap: () {
+        NavigatorUtil.push(
+            context,
+            WebView(
+              url: model.url,
+              statusBarColor: model.statusBarColor,
+              title: model.title,
+              hideAppBar: model.hideAppBar,
+            ));
+      },
+      child: widget,
     );
   }
 }
